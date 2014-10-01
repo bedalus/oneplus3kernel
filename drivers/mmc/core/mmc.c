@@ -1064,7 +1064,7 @@ static int mmc_select_hs_ddr(struct mmc_card *card)
 			ext_csd_bits,
 			card->ext_csd.generic_cmd6_time);
 	if (err) {
-		pr_warn("%s: switch to bus width %d ddr failed\n",
+		pr_err("%s: switch to bus width %d ddr failed\n",
 			mmc_hostname(host), 1 << bus_width);
 		return err;
 	}
@@ -1155,7 +1155,7 @@ static int mmc_select_hs400(struct mmc_card *card)
 			   card->ext_csd.generic_cmd6_time,
 			   true, true, true);
 	if (err) {
-		pr_warn("%s: switch to high-speed from hs200 failed, err:%d\n",
+		pr_err("%s: switch to high-speed from hs200 failed, err:%d\n",
 			mmc_hostname(host), err);
 		return err;
 	}
@@ -1172,7 +1172,7 @@ static int mmc_select_hs400(struct mmc_card *card)
 			 val,
 			 card->ext_csd.generic_cmd6_time);
 	if (err) {
-		pr_warn("%s: switch to bus width for hs400 failed, err:%d\n",
+		pr_err("%s: switch to bus width for hs400 failed, err:%d\n",
 			mmc_hostname(host), err);
 		return err;
 	}
@@ -1182,7 +1182,7 @@ static int mmc_select_hs400(struct mmc_card *card)
 			   card->ext_csd.generic_cmd6_time,
 			   true, true, true);
 	if (err) {
-		pr_warn("%s: switch to hs400 failed, err:%d\n",
+		pr_err("%s: switch to hs400 failed, err:%d\n",
 			 mmc_hostname(host), err);
 		return err;
 	}
@@ -1355,7 +1355,7 @@ static int mmc_hs200_tuning(struct mmc_card *card)
 		mmc_host_clk_release(host);
 
 		if (err)
-			pr_warn("%s: tuning execution failed\n",
+			pr_err("%s: tuning execution failed\n",
 				mmc_hostname(host));
 	}
 
@@ -1862,18 +1862,18 @@ reinit:
 	if (mmc_card_hs200(card)) {
 		err = mmc_hs200_tuning(card);
 		if (err)
-			goto err;
+			goto free_card;
 
 		err = mmc_select_hs400(card);
 		if (err)
-			goto err;
+			goto free_card;
 	} else if (mmc_card_hs(card)) {
 		/* Select the desired bus width optionally */
 		err = mmc_select_bus_width(card);
 		if (!IS_ERR_VALUE(err)) {
 			err = mmc_select_hs_ddr(card);
 			if (err)
-				goto err;
+				goto free_card;
 		}
 	}
 
