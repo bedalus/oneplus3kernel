@@ -4273,6 +4273,9 @@ static const struct ata_blacklist_entry ata_device_blacklist [] = {
 	/* devices that don't properly handle TRIM commands */
 	{ "SuperSSpeed S238*",		NULL,	ATA_HORKAGE_NOTRIM, },
 
+	/* devices that don't properly handle TRIM commands */
+	{ "SuperSSpeed S238*",		NULL,	ATA_HORKAGE_NOTRIM, },
+
 	/*
 	 * Some WD SATA-I drives spin up and down erratically when the link
 	 * is put into the slumber mode.  We don't have full list of the
