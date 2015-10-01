@@ -2126,6 +2126,11 @@ static int unix_stream_recvmsg(struct kiocb *iocb, struct socket *sock,
 	else
 		skip = 0;
 
+	if (flags & MSG_PEEK)
+		skip = sk_peek_offset(sk, flags);
+	else
+		skip = 0;
+
 	do {
 		int chunk;
 		struct sk_buff *skb, *last;
