@@ -25,6 +25,7 @@
 
 #define MIDR_CORTEX_A53 MIDR_CPU_PART(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A53)
 #define MIDR_CORTEX_A57 MIDR_CPU_PART(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A57)
+#define MIDR_KRYO2XX_SILVER MIDR_CPU_PART(ARM_CPU_IMP_QCOM, ARM_CPU_PART_KRYO2XX_SILVER)
 
 /*
  * Add a struct or another datatype to the union below if you need
@@ -98,6 +99,12 @@ struct arm64_cpu_capabilities arm64_errata[] = {
 		.desc = "ARM erratum 845719",
 		.capability = ARM64_WORKAROUND_845719,
 		MIDR_RANGE(MIDR_CORTEX_A53, 0x00, 0x04),
+	},
+	{
+	/* Kryo2xx Silver rAp4 */
+		.desc = "Kryo2xx Silver erratum 845719",
+		.capability = ARM64_WORKAROUND_845719,
+		MIDR_RANGE(MIDR_KRYO2XX_SILVER, 0xA00004, 0xA00004),
 	},
 #endif
 	{
