@@ -178,6 +178,11 @@ static u8 *mipi_exec_gpio(struct intel_dsi *intel_dsi, u8 *data)
 		goto out;
 	}
 
+	if (gpio >= ARRAY_SIZE(gtable)) {
+		DRM_DEBUG_KMS("unknown gpio %u\n", gpio);
+		goto out;
+	}
+
 	function = gtable[gpio].function_reg;
 	pad = gtable[gpio].pad_reg;
 
