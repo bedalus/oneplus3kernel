@@ -136,7 +136,6 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
 
 	/* Enable interrupts */
 	channel_set_bit(dw, MASK.XFER, dwc->mask);
-	channel_set_bit(dw, MASK.BLOCK, dwc->mask);
 	channel_set_bit(dw, MASK.ERROR, dwc->mask);
 
 	dwc->initialized = true;
@@ -603,7 +602,6 @@ static void dw_dma_tasklet(unsigned long data)
 
 	/* Re-enable interrupts */
 	channel_set_bit(dw, MASK.XFER, dw->all_chan_mask);
-	channel_set_bit(dw, MASK.BLOCK, dw->all_chan_mask);
 	channel_set_bit(dw, MASK.ERROR, dw->all_chan_mask);
 }
 
