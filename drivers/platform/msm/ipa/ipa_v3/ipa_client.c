@@ -129,7 +129,7 @@ static int ipa3_smmu_map_peer_bam(unsigned long dev)
 	u32 size;
 	struct iommu_domain *smmu_domain;
 
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		if (ipa3_ctx->peer_bam_map_cnt == 0) {
 			if (sps_get_bam_addr(dev, &base, &size)) {
 				IPAERR("Fail to get addr\n");
@@ -246,7 +246,7 @@ static int ipa3_connect_allocate_fifo(const struct ipa_connect_params *in,
 			dma_alloc_coherent(ipa3_ctx->pdev, mem_buff_ptr->size,
 			&dma_addr, GFP_KERNEL);
 	}
-	if (!ipa3_ctx->smmu_present) {
+	if (ipa3_ctx->smmu_s1_bypass) {
 		mem_buff_ptr->phys_base = dma_addr;
 	} else {
 		mem_buff_ptr->iova = dma_addr;
@@ -351,7 +351,7 @@ int ipa3_connect(const struct ipa_connect_params *in,
 		goto ipa_cfg_ep_fail;
 	}
 
-	if (ipa3_ctx->smmu_present &&
+	if (!ipa3_ctx->smmu_s1_bypass &&
 			(in->desc.base == NULL ||
 			 in->data.base == NULL)) {
 		IPAERR(" allocate FIFOs data_fifo=0x%p desc_fifo=0x%p.\n",
@@ -393,7 +393,7 @@ int ipa3_connect(const struct ipa_connect_params *in,
 	IPADBG("Data FIFO pa=%pa, size=%d\n", &ep->connect.data.phys_base,
 	       ep->connect.data.size);
 
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		ep->connect.data.iova = ep->connect.data.phys_base;
 		base = ep->connect.data.iova;
 		smmu_domain = ipa_get_smmu_domain();
@@ -453,7 +453,7 @@ int ipa3_connect(const struct ipa_connect_params *in,
 	return 0;
 
 sps_connect_fail:
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		base = ep->connect.desc.iova;
 		smmu_domain = ipa_get_smmu_domain();
 		if (smmu_domain != NULL) {
@@ -464,7 +464,7 @@ sps_connect_fail:
 		}
 	}
 iommu_map_desc_fail:
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		base = ep->connect.data.iova;
 		smmu_domain = ipa_get_smmu_domain();
 		if (smmu_domain != NULL) {
@@ -510,7 +510,7 @@ static int ipa3_smmu_unmap_peer_bam(unsigned long dev)
 	size_t len;
 	struct iommu_domain *smmu_domain;
 
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		WARN_ON(dev != ipa3_ctx->peer_bam_dev);
 		ipa3_ctx->peer_bam_map_cnt--;
 		if (ipa3_ctx->peer_bam_map_cnt == 0) {
@@ -619,7 +619,7 @@ int ipa3_disconnect(u32 clnt_hdl)
 					  ep->connect.data.size);
 	}
 
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		base = ep->connect.desc.iova;
 		smmu_domain = ipa_get_smmu_domain();
 		if (smmu_domain != NULL) {
@@ -630,7 +630,7 @@ int ipa3_disconnect(u32 clnt_hdl)
 		}
 	}
 
-	if (ipa3_ctx->smmu_present) {
+	if (!ipa3_ctx->smmu_s1_bypass) {
 		base = ep->connect.data.iova;
 		smmu_domain = ipa_get_smmu_domain();
 		if (smmu_domain != NULL) {
