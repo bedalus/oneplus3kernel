@@ -87,6 +87,9 @@ out:
 int ext4_process_policy(const struct ext4_encryption_policy *policy,
 			struct inode *inode)
 {
+	if (!inode_owner_or_capable(inode))
+		return -EACCES;
+
 	if (policy->version != 0)
 		return -EINVAL;
 
