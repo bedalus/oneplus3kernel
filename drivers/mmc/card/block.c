@@ -827,13 +827,12 @@ static int mmc_blk_ioctl_rpmb_cmd(struct block_device *bdev,
 		return err;
 	}
 
+	card = md->queue.card;
 	idata = mmc_blk_ioctl_rpmb_copy_from_user(ic_ptr);
 	if (IS_ERR(idata)) {
 		err = PTR_ERR(idata);
 		goto cmd_done;
 	}
-
-	card = md->queue.card;
 	if (IS_ERR(card)) {
 		err = PTR_ERR(card);
 		goto idata_free;

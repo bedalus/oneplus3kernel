@@ -1693,21 +1693,22 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 		pwr->bus_width = 0;
 
 	/* Check if gpu bandwidth vote device is defined in dts */
-	if (pwr->bus_control)
+	if (pwr->bus_control) {
 		/* Check if gpu bandwidth vote device is defined in dts */
 		gpubw_dev_node = of_parse_phandle(pdev->dev.of_node,
 					"qcom,gpubw-dev", 0);
 
-	/*
-	 * Governor support enables the gpu bus scaling via governor
-	 * and hence no need to register for bus scaling client
-	 * if gpubw-dev is defined.
-	 */
-	if (gpubw_dev_node) {
-		p2dev = of_find_device_by_node(gpubw_dev_node);
-		if (p2dev)
-			pwr->devbw = &p2dev->dev;
-	} else {
+		/*
+		 * Governor support enables the gpu bus scaling via governor
+		 * and hence no need to register for bus scaling client
+		 * if gpubw-dev is defined.
+		 */
+		if (gpubw_dev_node) {
+			p2dev = of_find_device_by_node(gpubw_dev_node);
+			if (p2dev)
+				pwr->devbw = &p2dev->dev;
+		}
+	}  else {
 		/*
 		 * Register for gpu bus scaling if governor support
 		 * is not enabled and gpu bus voting is to be done

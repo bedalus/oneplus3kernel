@@ -277,10 +277,6 @@ int msm_core_debug_init(void)
 	struct dentry *file;
 	int i;
 
-	msm_core_data = get_cpu_pwr_stats();
-	if (!msm_core_data)
-		goto fail;
-
 	dir = debugfs_create_dir("msm_core", NULL);
 	if (IS_ERR_OR_NULL(dir))
 		return PTR_ERR(dir);
@@ -289,6 +285,10 @@ int msm_core_debug_init(void)
 			S_IRUSR|S_IRGRP|S_IWUSR|S_IWGRP, dir, NULL,
 			&msm_core_enable_ops);
 	if (IS_ERR_OR_NULL(file))
+		goto fail;
+
+	msm_core_data = get_cpu_pwr_stats();
+	if (!msm_core_data)
 		goto fail;
 
 	file = debugfs_create_file("ptable",

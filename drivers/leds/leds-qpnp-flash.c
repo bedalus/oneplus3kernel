@@ -2462,6 +2462,8 @@ static int qpnp_flash_led_probe(struct spmi_device *spmi)
 		return -ENOMEM;
 	}
 
+	root = debugfs_create_dir("flashLED", NULL);
+
 	for_each_child_of_node(node, temp) {
 		led->flash_node[i].cdev.brightness_set =
 						qpnp_flash_led_brightness_set;
@@ -2544,7 +2546,6 @@ static int qpnp_flash_led_probe(struct spmi_device *spmi)
 
 	led->num_leds = i;
 
-	root = debugfs_create_dir("flashLED", NULL);
 	if (IS_ERR_OR_NULL(root)) {
 		pr_err("Error creating top level directory err%ld",
 			(long)root);
