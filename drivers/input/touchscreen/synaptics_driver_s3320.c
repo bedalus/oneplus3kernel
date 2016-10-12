@@ -2301,6 +2301,7 @@ static int	synaptics_input_init(struct synaptics_ts_data *ts)
 	set_bit(KEY_F4 , ts->input_dev->keybit);//doulbe-tap resume
 #endif
 	/* For multi touch */
+	set_bit(BTN_TOOL_FINGER, ts->input_dev->keybit);
 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0, (ts->max_x-1), 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0, (ts->max_y-1), 0, 0);
