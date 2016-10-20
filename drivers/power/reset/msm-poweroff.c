@@ -61,8 +61,6 @@ extern char oem_ufs_fw_version[3];
 
 extern uint32_t chip_serial_num;
 
-extern struct boot_shared_imem_cookie_type *boot_shared_imem_cookie_ptr;
-
 static int restart_mode;
 static void *restart_reason, *dload_type_addr;
 static bool scm_pmic_arbiter_disable_supported;
@@ -585,14 +583,6 @@ static int msm_restart_probe(struct platform_device *pdev)
 		"boot command: %s\r\n",
 		oem_hw_version, oem_rf_version, chip_serial_num, oem_ddr_manufacture_info, oem_ufs_manufacture_info, oem_ufs_fw_version,
 		oem_pcba_number+1, oem_serialno, linux_banner, saved_command_line);
-	boot_shared_imem_cookie_ptr = ioremap(SHARED_IMEM_BOOT_BASE, sizeof(struct boot_shared_imem_cookie_type));
-	if(!boot_shared_imem_cookie_ptr)
-		pr_err("unable to map imem DLOAD mode offset for OEM usages\n");
-	else
-	{
-		__raw_writel(virt_to_phys(device_info), &(boot_shared_imem_cookie_ptr->device_info_addr));
-		__raw_writel(strlen(device_info), &(boot_shared_imem_cookie_ptr->device_info_size));
-	}
 
 	np = of_find_compatible_node(NULL, NULL,
 				"qcom,msm-imem-dload-type");

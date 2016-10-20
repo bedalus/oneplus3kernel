@@ -69,22 +69,7 @@ extern void *restart_reason;
 
 void backtrace_test_saved(void)
 {
-	struct stack_trace trace;
-	unsigned long entries[8];
-
 	printk("\nThe following trace is a kernel self test and not a bug!\n");
-
-	trace.nr_entries = 0;
-	trace.max_entries = ARRAY_SIZE(entries);
-	trace.entries = entries;
-	trace.skip = 0;
-
-	printk("Testing a dump_stack.\n");
-	dump_stack();
-	//printk("Testing a save_stack_trace.\n");
-	//save_stack_trace(&trace);
-	printk("Testing a print_stack_trace.\n");
-	print_stack_trace(&trace, 0);
 }
 
 void tasks_mem_get(struct mm_struct *mm, unsigned long *vsize, unsigned long *vrss)
