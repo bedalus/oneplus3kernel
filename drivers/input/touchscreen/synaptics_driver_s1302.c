@@ -1089,7 +1089,8 @@ static ssize_t synaptics_s1302_radd_write(struct file *file, const char __user *
     }
     else
         block = temp_block;
-	return count;
+
+    return count;
 }
 static int synaptics_s1302_radd_open(struct inode *inode, struct file *file)
 {
@@ -1979,18 +1980,18 @@ static int synaptics_ts_probe(struct i2c_client *client, const struct i2c_device
 	i2c_set_clientdata(client, ts);
 	ts->dev = &client->dev;
 	ts->loading_fw = false;
-    tc_g = ts;
+	tc_g = ts;
 #if (defined SUPPORT_VIRTUAL_KEY)
-    init_completion(&key_cm);
+	init_completion(&key_cm);
 #endif
-    ret = synaptics_dsx_pinctrl_init(ts);
-    if (!ret && ts->pinctrl) {
-        ret = pinctrl_select_state(ts->pinctrl,
-                ts->pinctrl_state_active);
+	ret = synaptics_dsx_pinctrl_init(ts);
+	if (!ret && ts->pinctrl) {
+        	ret = pinctrl_select_state(ts->pinctrl,
+                	ts->pinctrl_state_active);
         }
 
 	synaptics_parse_dts(&client->dev, ts);
-    /***power_init*****/
+	/***power_init*****/
 	ret = tc_power(ts, 1);
 	if( ret < 0 )
 		TPD_ERR("regulator_enable is called\n");

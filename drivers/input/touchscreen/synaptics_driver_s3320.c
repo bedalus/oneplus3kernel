@@ -1596,10 +1596,10 @@ static ssize_t synap_read_address(struct file *file, char __user *user_buf, size
 static ssize_t synap_write_address(struct file *file, const char __user *buffer, size_t count, loff_t *ppos)
 {
 	int buf[128];
-    int ret,i;
+	int ret,i;
 	struct synaptics_ts_data *ts = ts_g;
-    int temp_block,wbyte;
-    char reg[30];
+	int temp_block,wbyte;
+	char reg[30];
 
     ret = sscanf(buffer,"%x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x",\
     &buf[0],&buf[1],&buf[2],&buf[3],&buf[4],&buf[5],&buf[6],&buf[7],&buf[8],&buf[9],\
@@ -1629,7 +1629,8 @@ static ssize_t synap_write_address(struct file *file, const char __user *buffer,
     }
     else
         block = temp_block;
-	return count;
+
+    return count;
 }
 
 #ifdef SUPPORT_GLOVES_MODE
