@@ -608,6 +608,12 @@ config GPIO_SWITCH
 	help
 	  we can use gpio switch set gpio out high or low
 
+config BLX
+	bool "Enable BLX"
+	default y
+	help
+	  Enable Battery Life eXtender
+
 #add by xcb
 config BOOTLOADER_LOG
 	tristate "show bootloader log"
