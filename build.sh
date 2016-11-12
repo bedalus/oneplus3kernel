@@ -15,4 +15,4 @@ cp -f arch/arm64/boot/Image.gz-dtb ../zip/kernel/zImage
 ls -l ../zip/kernel/zImage
 cd ../zip
 zip -r -9 op3_vN.zip * > /dev/null
-mv op3_vN.zip /mnt/c/Users/bedal/Downloads/
+mv op3_vN.zip ../
