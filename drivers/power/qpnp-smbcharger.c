@@ -45,6 +45,10 @@
 
 #include <linux/proc_fs.h>
 
+#ifdef CONFIG_BLX
+#include <linux/blx.h>
+#endif
+
 #if defined(CONFIG_FB)
 /* yangfangbiao@oneplus.cn,20150519  Add for reset charge current when screen is off */
 #include <linux/notifier.h>
@@ -5218,12 +5222,34 @@ static void handle_usb_insertion(struct smbchg_chip *chip)
 	struct power_supply *parallel_psy = get_parallel_psy(chip);
 	enum power_supply_type usb_supply_type;
 	int rc;
+#ifdef CONFIG_BLX
+	int cap_level=0;
+#endif
 	char *usb_type_name = "null";
 
 	pr_smb(PR_STATUS, "triggered\n");
 	/* usb inserted */
 	read_usb_type(chip, &usb_type_name, &usb_supply_type);
 	charger_type_value= usb_supply_type;
+
+#ifdef CONFIG_BLX
+	//Battery capcity limiter by voltage reduction; method by bedalus@gmail.com
+	//Stock values adjusted down by function on blx: get_cap_level()
+	cap_level = get_cap_level();
+	chip->temp_more_cool_vbatdel=		3980-(17*cap_level);
+	chip->temp_more_cool_rechgvbat=		3700-( 3*cap_level);
+	chip->temp_cool_vbatdel=		4320-(34*cap_level);
+	chip->temp_cool_recharge_vbatdel=	4100-(23*cap_level);
+	chip->temp_littel_cool_vbatdel=		4320-(34*cap_level);
+	chip->temp_littel_cool_recharge_vbatdel=4220-(29*cap_level);
+	chip->temp_prenormal_vbatdel=		4320-(34*cap_level);
+	chip->temp_prenormal_recharge_vbatdel=	4220-(29*cap_level);
+	chip->temp_normal_vbatdel=		4320-(34*cap_level);
+	chip->temp_normal_recharge_vbatdel=	4220-(29*cap_level);
+	chip->temp_warm_vbatdel = 		4080-(22*cap_level);
+	chip->temp_warm_recharge_vbatdel=	4000-(18*cap_level);
+#endif
+
 	/* david.liu@oneplus.tw,20151119  Add delayed workqueue to re-detect charger type */
 	if (redet_en && usb_supply_type == POWER_SUPPLY_TYPE_USB) {
 		schedule_delayed_work(&chip->re_det_work,
@@ -9032,8 +9058,8 @@ static void qpnp_charge_info_init(struct smbchg_chip *chip)
 	chip->recharge_pending=false;
 	chip->recharge_status=false;
 
-	chip->temp_more_cool_rechgvbat=3700;   // -3 <= T < 0
 	chip->temp_more_cool_vbatdel=3980;   // -3 <= T < 0
+	chip->temp_more_cool_rechgvbat=3700;   // -3 <= T < 0
 	chip->temp_cool_vbatdel=4320;        //0 <= T < 5
 	chip->temp_cool_recharge_vbatdel=4100;
 	chip->temp_littel_cool_vbatdel=4320; // 5 <= T < 12
