@@ -102,7 +102,6 @@
 			 <&clock_gcc clk_ln_bb_clk>;
 		clock-names = "iface_clk", "ref_clk", "ref_clk_src";
 		clock-rate = <0>;
-		/*lyb@bsp 11/17/15: 15801 never VDD_HDMI(L12/L28)*/
 		status = "disabled";
 
 		qcom,platform-supply-entries {
