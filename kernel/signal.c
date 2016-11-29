@@ -1028,6 +1028,9 @@ static int __send_signal(int sig, struct siginfo *info, struct task_struct *t,
 	int override_rlimit;
 	int ret = 0, result;
 
+	if (sig == SIGHUP)
+		pr_debug("fname=%s(%d), send %d, tname=%s(%d)\n",
+			current->comm, current->pid, sig, t->comm, t->pid);
 	assert_spin_locked(&t->sighand->siglock);
 
 	result = TRACE_SIGNAL_IGNORED;
@@ -1188,6 +1191,9 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	unsigned long flags;
 	int ret = -ESRCH;
 
+	if(sig == SIGQUIT || SIGSEGV == sig) {
+		unfreezer_fork(p);
+	}
 	if (lock_task_sighand(p, &flags)) {
 		ret = send_signal(sig, info, p, group);
 		unlock_task_sighand(p, &flags);
@@ -2887,7 +2893,6 @@ SYSCALL_DEFINE4(rt_sigtimedwait, const sigset_t __user *, uthese,
 SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
 {
 	struct siginfo info;
-
 	info.si_signo = sig;
 	info.si_errno = 0;
 	info.si_code = SI_USER;
