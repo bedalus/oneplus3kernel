@@ -102,14 +102,14 @@ void limUpdateAssocStaDatas(tpAniSirGlobal pMac, tpDphHashNode pStaDs, tpSirAsso
            pStaDs->mlmStaContext.htCapability = pAssocRsp->HTCaps.present;
 
            if ( pAssocRsp->HTCaps.present ) {
-               pStaDs->htGreenfield = ( tANI_U8 ) pAssocRsp->HTCaps.greenField;
-               if (psessionEntry->htSupportedChannelWidthSet) {
-                   pStaDs->htSupportedChannelWidthSet =
+               	   pStaDs->htGreenfield = ( tANI_U8 ) pAssocRsp->HTCaps.greenField;
+                   if (psessionEntry->htSupportedChannelWidthSet) {
+                       pStaDs->htSupportedChannelWidthSet =
                            (tANI_U8)(pAssocRsp->HTCaps.supportedChannelWidthSet ?
                            pAssocRsp->HTInfo.recommendedTxWidthSet :
                            pAssocRsp->HTCaps.supportedChannelWidthSet);
-               }
-               else
+                   }
+                   else
                    pStaDs->htSupportedChannelWidthSet = eHT_CHANNEL_WIDTH_20MHZ;
 
                    pStaDs->htLsigTXOPProtection = ( tANI_U8 ) pAssocRsp->HTCaps.lsigTXOPProtection;

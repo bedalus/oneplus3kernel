@@ -5271,25 +5271,25 @@ tSirRetStatus limSendAddBARsp( tpAniSirGlobal pMac,
                 FL( "halTxFrame FAILED! Status [%d]" ),
                 halStatus );
 
-    // FIXME - HAL error codes are different from PE error
-    // codes!! And, this routine is returning tSirRetStatus
-    statusCode = eSIR_FAILURE;
-    //Pkt will be freed up by the callback
-    return statusCode;
-   }
-   else
+         // FIXME - HAL error codes are different from PE error
+         // codes!! And, this routine is returning tSirRetStatus
+         statusCode = eSIR_FAILURE;
+         //Pkt will be freed up by the callback
+         return statusCode;
+    }
+    else
       return eSIR_SUCCESS;
 
-      returnAfterError:
+returnAfterError:
 
-      // Release buffer, if allocated
-      if( NULL != pAddBARspBuffer )
+    // Release buffer, if allocated
+    if( NULL != pAddBARspBuffer )
         palPktFree( pMac->hHdd,
             HAL_TXRX_FRM_802_11_MGMT,
             (void *) pAddBARspBuffer,
             (void *) pPacket );
 
-      return statusCode;
+    return statusCode;
 }
 
 /**
@@ -5459,20 +5459,20 @@ tSirRetStatus limSendDelBAInd( tpAniSirGlobal pMac,
        statusCode = eSIR_FAILURE;
        //Pkt will be freed up by the callback
        return statusCode;
-    }
-    else
+   }
+   else
       return eSIR_SUCCESS;
 
-      returnAfterError:
+returnAfterError:
 
-      // Release buffer, if allocated
-      if( NULL != pDelBAIndBuffer )
+   // Release buffer, if allocated
+   if( NULL != pDelBAIndBuffer )
         palPktFree( pMac->hHdd,
             HAL_TXRX_FRM_802_11_MGMT,
             (void *) pDelBAIndBuffer,
             (void *) pPacket );
 
-      return statusCode;
+   return statusCode;
 }
 
 #if defined WLAN_FEATURE_VOWIFI
