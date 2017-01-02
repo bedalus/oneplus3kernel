@@ -749,7 +749,8 @@ typedef struct
 {
     tSirMacAddr          selfMacAddr;
     eHalStatus           status;
-    tANI_U8              oemDataReq[OEM_DATA_REQ_SIZE];
+    uint8_t              data_len;
+    uint8_t              *data;
 } tStartOemDataReq, *tpStartOemDataReq;
 
 typedef struct
@@ -924,7 +925,8 @@ typedef struct
 #ifdef WLAN_FEATURE_11AC
 typedef struct
 {
-   tANI_U16   opMode;
+   tANI_U16  opMode;
+   tANI_U16  chanMode;
    tANI_U16  staId;
    tANI_U16  smesessionId;
    tSirMacAddr peer_mac;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -143,7 +143,6 @@ typedef struct
 #define QCSAP_IOCTL_SET_NONE_GET_THREE      (SIOCIWFIRSTPRIV+3)
 #define WE_GET_TSF 1
 #define QCSAP_IOCTL_GET_STAWPAIE      (SIOCIWFIRSTPRIV+4)
-#define QCSAP_IOCTL_SETWPAIE          (SIOCIWFIRSTPRIV+5)
 #define QCSAP_IOCTL_STOPBSS           (SIOCIWFIRSTPRIV+6)
 #define QCSAP_IOCTL_VERSION           (SIOCIWFIRSTPRIV+7)
 #define QCSAP_IOCTL_GET_WPS_PBC_PROBE_REQ_IES       (SIOCIWFIRSTPRIV+8)
@@ -268,7 +267,7 @@ enum {
     QCASAP_SET_RADAR_DBG,
 };
 
-int iw_softap_get_channel_list(struct net_device *dev,
+int iw_get_channel_list(struct net_device *dev,
                                struct iw_request_info *info,
                                union iwreq_data *wrqu, char *extra);
 

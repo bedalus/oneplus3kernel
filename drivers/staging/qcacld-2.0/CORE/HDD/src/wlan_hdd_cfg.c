@@ -4113,6 +4113,13 @@ REG_TABLE_ENTRY g_registry_table[] =
                 CFG_TX_CHAIN_MASK_1SS_MIN,
                 CFG_TX_CHAIN_MASK_1SS_MAX),
 
+   REG_VARIABLE(CFG_TX_SCH_DELAY, WLAN_PARAM_Integer,
+                hdd_config_t, tx_sch_delay,
+                VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
+                CFG_TX_SCH_DELAY_DEFAULT,
+                CFG_TX_SCH_DELAY_MIN,
+                CFG_TX_SCH_DELAY_MAX),
+
    REG_VARIABLE(CFG_SELF_GEN_FRM_PWR, WLAN_PARAM_Integer,
                 hdd_config_t, self_gen_frm_pwr,
                 VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
@@ -4194,6 +4201,21 @@ REG_TABLE_ENTRY g_registry_table[] =
                 CFG_FIRST_SCAN_BUCKET_THRESHOLD_DEFAULT,
                 CFG_FIRST_SCAN_BUCKET_THRESHOLD_MIN,
                 CFG_FIRST_SCAN_BUCKET_THRESHOLD_MAX),
+
+   REG_VARIABLE(CFG_SAP_TX_LEAKAGE_THRESHOLD_NAME,
+                WLAN_PARAM_Integer,
+                hdd_config_t, sap_tx_leakage_threshold,
+                VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
+                CFG_SAP_TX_LEAKAGE_THRESHOLD_DEFAULT,
+                CFG_SAP_TX_LEAKAGE_THRESHOLD_MIN,
+                CFG_SAP_TX_LEAKAGE_THRESHOLD_MAX),
+
+   REG_VARIABLE(CFG_TGT_GTX_USR_CFG_NAME, WLAN_PARAM_Integer,
+                hdd_config_t, tgt_gtx_usr_cfg,
+                VAR_FLAGS_OPTIONAL | VAR_FLAGS_RANGE_CHECK_ASSUME_DEFAULT,
+                CFG_TGT_GTX_USR_CFG_DEFAULT,
+                CFG_TGT_GTX_USR_CFG_MIN,
+                CFG_TGT_GTX_USR_CFG_MAX),
 };
 
 #ifdef WLAN_FEATURE_MBSSID
@@ -4267,23 +4289,21 @@ static char *i_trim(char *str)
 {
    char *ptr;
 
-   if (*str == '\0') 
-	return str;
+   if(*str == '\0') return str;
 
    /* Find the first non white-space*/
-   for (ptr = str; i_isspace(*ptr); ptr++) {
-	if (*ptr == '\0') return str;
-   }
+   for (ptr = str; i_isspace(*ptr); ptr++);
+      if (*ptr == '\0')
+         return str;
 
    /* This is the new start of the string*/
    str = ptr;
 
    /* Find the last non white-space */
    ptr += strlen(ptr) - 1;
-   for (; ptr != str && i_isspace(*ptr); ptr--) {
+   for (; ptr != str && i_isspace(*ptr); ptr--);
       /* Null terminate the following character */
       ptr[1] = '\0';
-   }
 
    return str;
 }
@@ -4881,6 +4901,9 @@ void print_hdd_cfg(hdd_context_t *pHddCtx)
   hddLog(LOG2, "Name = [gIdleTimeConc] Value = [%u]",
                    pHddCtx->cfg_ini->idle_time_conc);
 
+  hddLog(LOG2, "Name = [%s] Value = [%u]",
+                 CFG_TGT_GTX_USR_CFG_NAME,
+                 pHddCtx->cfg_ini->tgt_gtx_usr_cfg);
 }
 
 #define CFG_VALUE_MAX_LEN 256
@@ -4958,7 +4981,7 @@ static VOS_STATUS hdd_cfg_get_config(REG_TABLE_ENTRY *reg_table,
       // ideally we want to return the config to the application
       // however the config is too big so we just printk() for now
 #ifdef RETURN_IN_BUFFER
-      if (curlen <= buflen)
+      if (curlen < buflen)
       {
          // copy string + '\0'
          memcpy(pCur, configStr, curlen+1);
@@ -5722,7 +5745,7 @@ VOS_STATUS hdd_hex_string_to_u16_array(char *str,
 		uint16_t *int_array, uint8_t *len, uint8_t int_array_max_len)
 {
 	char *s = str;
-	int val = 0;
+	uint32_t val = 0;
 	if (str == NULL || int_array == NULL || len == NULL)
 		return VOS_STATUS_E_INVAL;
 
@@ -5977,13 +6000,14 @@ v_BOOL_t hdd_update_config_dat( hdd_context_t *pHddCtx )
         hddLog(LOGE, "Could not pass on WNI_CFG_GO_LINK_MONITOR_TIMEOUT to CCM");
      }
 
+
 #if defined WLAN_FEATURE_VOWIFI
     if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_MCAST_BCAST_FILTER_SETTING, pConfig->mcastBcastFilterSetting,
                      NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
-#else
+#endif
+
      if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_SINGLE_TID_RC, pConfig->bSingleTidRc,
                       NULL, eANI_BOOLEAN_FALSE)==eHAL_STATUS_FAILURE)
-#endif
      {
         fStatus = FALSE;
         hddLog(LOGE,"Failure: Could not pass on WNI_CFG_SINGLE_TID_RC configuration info to CCM");
@@ -6434,6 +6458,15 @@ v_BOOL_t hdd_update_config_dat( hdd_context_t *pHddCtx )
       fStatus = FALSE;
       hddLog(LOGE, "Could not pass on WNI_CFG_IBSS_ATIM_WIN_SIZE to CCM");
    }
+
+   if (ccmCfgSetInt(pHddCtx->hHal, WNI_CFG_TGT_GTX_USR_CFG,
+                    pConfig->tgt_gtx_usr_cfg, NULL,
+                    eANI_BOOLEAN_FALSE) == eHAL_STATUS_FAILURE)
+   {
+      fStatus = FALSE;
+      hddLog(LOGE, "Could not pass on WNI_CFG_TGT_GTX_USR_CFG to CCM");
+   }
+
    return fStatus;
 }
 

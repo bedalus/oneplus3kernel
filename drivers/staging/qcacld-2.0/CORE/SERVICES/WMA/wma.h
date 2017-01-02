@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -533,6 +533,7 @@ struct wma_txrx_node {
 	tANI_U8                 vht_capable;
 	tANI_U8                 ht_capable;
 	A_UINT32                mhz; /* channel frequency  in KHZ */
+	bool vdev_active;
 	v_BOOL_t vdev_up;
 	u_int64_t tsfadjust;
 	void     *addBssStaContext;
@@ -557,7 +558,6 @@ struct wma_txrx_node {
 #if defined WLAN_FEATURE_VOWIFI_11R
         void    *staKeyParams;
 #endif
-	v_BOOL_t ps_enabled;
 	u_int32_t dtim_policy;
 	u_int32_t peer_count;
 	v_BOOL_t roam_synch_in_progress;
@@ -574,6 +574,8 @@ struct wma_txrx_node {
 	uint8_t nss_5g;
 
 	uint8_t wep_default_key_idx;
+	bool is_vdev_valid;
+
 };
 
 #if defined(QCA_WIFI_FTM)
@@ -762,6 +764,9 @@ typedef struct wma_handle {
 
    /*DFS umac interface information*/
    struct ieee80211com *dfs_ic;
+
+        txFailIndCallback hddTxFailCb;
+
 #ifdef FEATURE_WLAN_SCAN_PNO
 	vos_wake_lock_t pno_wake_lock;
 #endif
@@ -802,6 +807,10 @@ typedef struct wma_handle {
 	u_int8_t staModDtim;
 	u_int8_t staDynamicDtim;
 
+	u_int8_t enable_mhf_offload;
+	/* timestamp when last entries where set */
+	v_TIME_t last_mhf_entries_timestamp;
+
 	int32_t dfs_pri_multiplier;
 
 	u_int32_t hw_bd_id;
@@ -841,7 +850,7 @@ typedef struct wma_handle {
 	uint16_t max_mgmt_tx_fail_count;
 
 	struct wma_runtime_pm_context runtime_context;
-	struct sir_allowed_action_frames allowed_action_frames;
+	uint32_t fine_time_measurement_cap;
 }t_wma_handle, *tp_wma_handle;
 
 struct wma_target_cap {
@@ -1678,5 +1687,9 @@ int wma_crash_inject(tp_wma_handle wma_handle, uint32_t type,
 			uint32_t delay_time_ms);
 
 uint32_t wma_get_vht_ch_width(void);
+
+WLAN_PHY_MODE wma_chan_to_mode(uint8_t chan, ePhyChanBondState chan_offset,
+		uint8_t vht_capable, uint8_t dot11_mode);
+
 
 #endif

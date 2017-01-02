@@ -1377,7 +1377,8 @@ wmi_config_debug_module_cmd(wmi_unified_t  wmi_handle, A_UINT32 param, A_UINT32 
         }
     }
 
-    AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("wmi_dbg_cfg_send: param 0x%x val 0x%x \n ", param, val));
+    AR_DEBUG_PRINTF(ATH_DEBUG_INFO, ("wmi_dbg_cfg_send: param 0x%x val 0x%x \n",
+                                     param, val));
 
     status = wmi_unified_cmd_send(wmi_handle, buf,
                 len, WMI_DBGLOG_CFG_CMDID);
@@ -1408,6 +1409,12 @@ dbglog_set_mod_enable_bitmap(wmi_unified_t  wmi_handle,A_UINT32 log_level, A_UIN
 int dbglog_report_enable(wmi_unified_t  wmi_handle, bool isenable)
 {
     int bitmap[2] = {0};
+
+    if (isenable > TRUE) {
+        AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("dbglog_report_enable:Invalid value %d\n",
+        isenable));
+        return -EINVAL;
+    }
 
     if(isenable){
 	/* set the vap enable bitmap */
