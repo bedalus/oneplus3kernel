@@ -43,6 +43,9 @@
 #include <linux/type-c_notifier.h>
 #include <linux/wakelock.h>
 #include <linux/proc_fs.h>
+#ifdef CONFIG_BLX
+#include <linux/blx.h>
+#endif
 #if defined(CONFIG_FB)
 #include <linux/notifier.h>
 #include <linux/fb.h>
@@ -5407,6 +5410,9 @@ static void handle_usb_insertion(struct smbchg_chip *chip)
 {
 	enum power_supply_type usb_supply_type;
 	int rc;
+#ifdef CONFIG_BLX
+	int cap_level=0;
+#endif
 	int temp_region;
 	char *usb_type_name = "null";
 
@@ -5414,6 +5420,31 @@ static void handle_usb_insertion(struct smbchg_chip *chip)
 	/* usb inserted */
 	read_usb_type(chip, &usb_type_name, &usb_supply_type);
 	charger_type = usb_supply_type;
+
+#ifdef CONFIG_BLX
+	//Battery capcity limiter by voltage reduction; method by bedalus@gmail.com
+	//Stock values adjusted down by function on blx: get_cap_level()
+	cap_level = get_cap_level();
+
+	//vbatmax-little-cold-mv
+	chip->vbatmax[BATT_TEMP_LITTLE_COLD] = 	3980 - (17 * cap_level);
+
+	//vbatmax-cool-mv
+	chip->vbatmax[BATT_TEMP_COOL] = 	4320 - (34 * cap_level);
+
+	//vbatmax-little-cool-mv
+	chip->vbatmax[BATT_TEMP_LITTLE_COOL] = 	4320 - (34 * cap_level);
+
+	//vbatmax-pre-normal-mv
+	chip->vbatmax[BATT_TEMP_PRE_NORMAL] = 	4320 - (34 * cap_level);
+
+	//vbatmax-normal-mv
+	chip->vbatmax[BATT_TEMP_NORMAL] = 	4320 - (34 * cap_level);
+
+	//vbatmax-warm-mv
+	chip->vbatmax[BATT_TEMP_WARM] = 	4080 - (22 * cap_level);
+#endif
+
 	if (redet_en && usb_supply_type == POWER_SUPPLY_TYPE_USB) {
 		schedule_delayed_work(&chip->re_det_work,
 				msecs_to_jiffies(REDET_DELAY_MS));
