@@ -5,4 +5,5 @@ export SUBARCH=arm64
 export CROSS_COMPILE=aarch64-linux-gnu-
 make msm-perf_defconfig
 
+make clean
 make mrproper
