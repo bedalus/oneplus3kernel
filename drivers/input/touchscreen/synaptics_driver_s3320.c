@@ -180,7 +180,7 @@ static int gesture_switch = 0;
 static int baseline_ret = 0;
 static int TP_FW;
 static int tp_dev = 6;
-static unsigned int tp_debug = 1;
+static unsigned int tp_debug = 0;
 static int button_map[3];
 static int tx_rx_num[2];
 static int16_t Rxdata[30][30];
@@ -1181,7 +1181,7 @@ static void gesture_judge(struct synaptics_ts_data *ts)
 				(gesture_buffer[2] == 0x6d) ? Mgestrue :
 				UnkownGestrue;
 	}
-
+/*
 	keyCode = UnkownGestrue;
 	// Get key code based on registered gesture.
 	switch (gesture) {
@@ -1209,7 +1209,7 @@ static void gesture_judge(struct synaptics_ts_data *ts)
 		default:
 			break;
 	}
-
+*/
 	TPD_ERR("detect %s gesture\n", gesture == DouTap ? "(double tap)" :
 			gesture == UpVee ? "(V)" :
 			gesture == DownVee ? "(^)" :
