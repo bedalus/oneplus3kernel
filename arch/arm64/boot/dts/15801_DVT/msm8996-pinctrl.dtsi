@@ -20,6 +20,20 @@
 		interrupt-controller;
 		#interrupt-cells = <2>;
 
+		/* pin governing mux between QSPI and modem on auto boards */
+		modem_mux: mdm_mux {
+			mux {
+				pins = "gpio121";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio121";
+				drive-strength = <2>;
+				bias-pull-up;
+				output-high;
+			};
+		};
 		uart_console_active: uart_console_active {
 			mux {
 				pins = "gpio4", "gpio5";
@@ -1670,7 +1684,63 @@
 				};
 			};
 		};
+		ap_mclk_en {
+			ap_mclk_sleep: ap_mclk_sleep {
+				mux {
+					pins = "gpio133";
+					function = "gpio";
+				};
 
+				config {
+					pins = "gpio133";
+					drive-strength = <2>;
+					bias-pull-down;
+					output-low;
+				};
+			};
+			ap_mclk_active: ap_mclk_active {
+				mux {
+					pins = "gpio133";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio133";
+					drive-strength = <2>;
+					bias-disable;
+					output-high;
+				};
+			};
+		};
+
+		mdm_mclk_en {
+			mdm_mclk_sleep: mdm_mclk_sleep {
+				mux {
+					pins = "gpio134";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio134";
+					drive-strength = <2>;
+					bias-pull-down;
+					output-low;
+				};
+			};
+			mdm_mclk_active: mdm_mclk_active {
+				mux {
+					pins = "gpio134";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio134";
+					drive-strength = <2>;
+					bias-disable;
+					output-high;
+				};
+			};
+		};
 
 		cci0_active: cci0_active {
 			mux {
