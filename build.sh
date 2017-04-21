@@ -8,6 +8,7 @@ make msm-perf_defconfig
 make -j7
 
 # modules
+rm ../zip/system/lib/modules/*
 find ./ -type f -name '*.ko' -exec cp -f {} ../zip/system/lib/modules/ \;
 
 # copy zImage
