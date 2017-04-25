@@ -52,6 +52,7 @@
 #endif
 
 #include <linux/input/mt.h>
+#include <linux/bedalus.h>
 
 #include "synaptics_s1302_redremote.h"
 //#include <linux/boot_mode.h>
@@ -1976,6 +1977,8 @@ static void synaptics_input_event(struct input_handle *handle,
 
 	/* Disable capacitive keys when user's finger is on touchscreen */
 	ts->stop_keypad = value;
+	/* Enable haptics */
+	fp_aqrd = false;
 }
 
 static int synaptics_input_connect(struct input_handler *handler,

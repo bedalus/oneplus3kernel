@@ -24,6 +24,7 @@
 #include <linux/err.h>
 #include <linux/delay.h>
 #include <linux/qpnp/qpnp-haptic.h>
+#include <linux/bedalus.h>
 #include "../../staging/android/timed_output.h"
 
 #define QPNP_IRQ_FLAGS	(IRQF_TRIGGER_RISING | \
@@ -1562,6 +1563,8 @@ static void qpnp_hap_td_enable(struct timed_output_dev *dev, int value)
 	struct qpnp_hap *hap = container_of(dev, struct qpnp_hap,
 					 timed_dev);
 	flush_work(&hap->work);
+
+	if (fp_aqrd) return;
 
 	mutex_lock(&hap->lock);
 

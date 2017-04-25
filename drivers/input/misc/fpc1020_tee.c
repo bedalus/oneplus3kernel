@@ -46,6 +46,7 @@
 
 #include <linux/wakelock.h>
 #include <linux/input.h>
+#include <linux/bedalus.h>
 
 #ifdef CONFIG_FB
 #include <linux/fb.h>
@@ -56,6 +57,8 @@
 
 static unsigned int ignor_home_for_ESD = 0;
 module_param(ignor_home_for_ESD, uint, S_IRUGO | S_IWUSR);
+
+bool fp_aqrd = false;
 
 #define FPC1020_RESET_LOW_US 1000
 #define FPC1020_RESET_HIGH1_US 100
@@ -461,7 +464,8 @@ static irqreturn_t fpc1020_irq_handler(int irq, void *handle)
 */
 	wake_lock_timeout(&fpc1020->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));//changhua add for KeyguardUpdateMonitor: fingerprint acquired, grabbing fp wakelock
     //dev_err(fpc1020->dev, "%s before sysfs_notify\n", __func__);
-
+	//bedalus
+	fp_aqrd = true;
 	sysfs_notify(&fpc1020->dev->kobj, NULL, dev_attr_irq.attr.name);
 	//dev_err(fpc1020->dev, "%s after sysfs_notify\n", __func__);
 
