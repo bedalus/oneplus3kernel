@@ -94,7 +94,7 @@
 
 	cd-gpios = <&tlmm 95 0x1>;
 	/*lyb@bsp 11/17/15: 15801 L13/L21 don't used for MicroSD*/
-	status = "disable";
+	status = "disabled";
 };
 
 &pm8994_vadc {
@@ -278,6 +278,7 @@
 	};
 };
 
+#if 0
 &mdss_hdmi_tx {
 	pinctrl-names = "hdmi_hpd_active", "hdmi_ddc_active", "hdmi_cec_active",
 				"hdmi_active", "hdmi_sleep";
@@ -292,6 +293,7 @@
 	pinctrl-4 = <&mdss_hdmi_hpd_suspend &mdss_hdmi_ddc_suspend
 						&mdss_hdmi_cec_suspend>;
 };
+#endif
 
 &pmi8994_vadc {
 	chan@0 {

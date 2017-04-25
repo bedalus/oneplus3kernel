@@ -60,6 +60,23 @@
 				qcom,s2-type = <7>;
 			};
 
+			qcom,pon_2 {
+				qcom,pon-type = <1>;
+				qcom,pull-up = <1>;
+				linux,code = <114>;
+				status = "disabled";
+			};
+
+			qcom,pon_3 {
+				qcom,pon-type = <3>;
+				qcom,support-reset = <1>;
+				qcom,pull-up = <1>;
+				qcom,s1-timer = <6720>;
+				qcom,s2-timer = <2000>;
+				qcom,s2-type = <7>;
+				qcom,use-bark;
+				status = "disabled";
+			};
 		};
 
 		pm8994_gpios: gpios {
