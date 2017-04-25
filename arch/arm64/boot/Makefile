@@ -14,9 +14,6 @@
 # Based on the ia64 boot/Makefile.
 #
 
-include $(srctree)/arch/arm64/boot/dts/15801_EVT2/Makefile
-include $(srctree)/arch/arm64/boot/dts/15801_EVT3/Makefile
-include $(srctree)/arch/arm64/boot/dts/15801_DVT/Makefile
 include $(srctree)/arch/arm64/boot/dts/15801_PVT/Makefile
 
 targets := Image Image.gz
